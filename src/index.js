@@ -30,14 +30,8 @@ function returnFirstArgument(a) {
  Пример:
    sumWithDefaults(10) вернет 110
  */
-function sumWithDefaults(a, b) {
-    const DEFAULT_VALUE = 100;
-
-    if (!b) {
-        return a + DEFAULT_VALUE;
-    } else { // todo I don't understand the problem from the red tooltip
-        return a + b;
-    }
+function sumWithDefaults(a, b = 100) {
+    return a + b;
 }
 
 /*
@@ -66,19 +60,13 @@ function returnFnResult(fn) {
    console.log(f()); // выведет 13
  */
 
-let counter = 0;
+function returnCounter(number = 0) {
+    var counter = 0;
 
-function returnCounter(number) {
     var fn = function () {
-        if (number) {
-            if (counter === 0) {
-                counter = ++number;
-            } else {
-                counter++;
-            }
-        } else {
-            return 0;
-        }
+        counter === 0 ?
+            counter = ++number :
+            counter++;
 
         return counter;
     };
