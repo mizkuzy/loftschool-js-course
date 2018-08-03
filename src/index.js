@@ -103,6 +103,7 @@ function returnArgumentsArray(...args) {
    console.log(newSum()) выведет 6
  */
 function bindFunction(fn) {
+    return Function.prototype.bind.apply(fn, arguments);
 }
 
 export {
