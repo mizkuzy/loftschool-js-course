@@ -105,9 +105,54 @@ function returnBadArguments(fn) {
     return thrownElements;
 }
 
+/*
+ Задание 4:
+
+ 4.1: Функция имеет параметр number (по умолчанию - 0)
+
+ 4.2: Функция должна вернуть объект, у которого должно быть несколько методов:
+   - sum - складывает number с переданными аргументами
+   - dif - вычитает из number переданные аргументы
+   - div - делит number на первый аргумент. Результат делится на следующий аргумент (если передан) и так далее
+   - mul - умножает number на первый аргумент. Результат умножается на следующий аргумент (если передан) и так далее
+
+ Количество передаваемых в методы аргументов заранее неизвестно
+
+ 4.3: Необходимо выбрасывать исключение в случаях:
+   - number не является числом (с текстом "number is not a number")
+   - какой-либо из аргументов div является нулем (с текстом "division by 0")
+ */
+function calculator(number = 0) {
+    if (!isFinite(number)) {
+        throw new Error('number is not a number');
+    }
+
+    return {
+        sum: (...args) => {
+            return args.reduce((prev, curr) => prev + curr, number);
+        },
+        dif: (...args) => {
+            return args.reduce((prev, curr) => prev - curr, number);
+        },
+        div: (...args) => {
+            return args.reduce((prev, curr) => {
+                if (curr === 0) {
+                    throw new Error('division by 0');
+                }
+
+                return prev / curr;
+            }, number);
+        },
+        mul: (...args) => {
+            return args.reduce((prev, curr) => prev * curr, number);
+        },
+    };
+}
+
+/* При решении задач, пострайтесь использовать отладчик */
 export {
     isAllTrue,
     isSomeTrue,
     returnBadArguments,
-    // calculator
+    calculator
 };
