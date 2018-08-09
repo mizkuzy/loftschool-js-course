@@ -28,9 +28,7 @@ function createDivWithText(text) {
    // добавит элемент переданный первым аргументом в начало элемента переданного вторым аргументом
  */
 function prepend(what, where) {
-    let firstElementChild = where.firstElementChild;
-
-    where.insertBefore(what, firstElementChild);
+    where.prepend(what);
 }
 
 /*
@@ -55,6 +53,16 @@ function prepend(what, where) {
    т.к. следующим соседом этих элементов является элемент с тегом P
  */
 function findAllPSiblings(where) {
+    let pSiblings = [];
+    let childrenElements = where.children;
+
+    for (let i = 0; i < childrenElements.length - 1; i++) {
+        if (childrenElements[i].nextElementSibling.tagName === 'P') {
+            pSiblings.push(childrenElements[i]);
+        }
+    }
+
+    return pSiblings;
 }
 
 /*
