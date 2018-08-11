@@ -86,7 +86,7 @@ function findAllPSiblings(where) {
 function findError(where) {
     var result = [];
 
-    for (var child of where.childNodes) {
+    for (var child of where.children) {
         result.push(child.innerText);
     }
 
@@ -106,21 +106,50 @@ function findError(where) {
    должно быть преобразовано в <div></div><p></p>
  */
 function deleteTextNodes(where) {
+    if (where.hasChildNodes()) {
+        let childNodes = where.childNodes;
+        const textNode = 3;
+
+        for (let node of childNodes) {
+            if (node.nodeType === textNode) {
+                where.removeChild(node);
+            }
+        }
+    }
 }
 
 /*
  Задание 6:
 
- Выполнить предудыщее задание с использование рекурсии - то есть необходимо заходить внутрь каждого дочернего элемента (углубляться в дерево)
-
- Задачу необходимо решить без использования рекурсии, то есть можно не уходить вглубь дерева.
- Так же будьте внимательны при удалении узлов, т.к. можно получить неожиданное поведение при переборе узлов
+ Выполнить предудыщее задание с использование рекурсии - то есть необходимо заходить внутрь каждого дочернего элемента
+ (углубляться в дерево)
 
  Пример:
-   После выполнения функции, дерево <span> <div> <b>привет</b> </div> <p>loftchool</p> !!!</span>
+   После выполнения функции, дерево <span> <div> <b>привет</b> </div> <p>loftschool</p> !!!</span>
    должно быть преобразовано в <span><div><b></b></div><p></p></span>
  */
 function deleteTextNodesRecursive(where) {
+    const textNode = 3;
+
+    let childNodesArr = getArr(where.childNodes);
+
+    for (const node of childNodesArr) {
+        deleteTextNodesRecursive(node);
+    }
+
+    if (where.nodeType === textNode) {
+        where.parentNode.removeChild(where);
+    }
+
+    function getArr(childNodes) {
+        let arr = [];
+
+        for (let n of childNodes) {
+            arr.push(n);
+        }
+
+        return arr;
+    }
 }
 
 /*

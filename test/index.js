@@ -1,14 +1,14 @@
-import { assert } from 'chai';
-import { randomValue } from '../helper';
+import {assert} from 'chai';
+import {randomValue} from '../helper';
 import {
+    collectDOMStat,
     createDivWithText,
-    prepend,
-    findAllPSiblings,
-    findError,
     deleteTextNodes,
     deleteTextNodesRecursive,
-    collectDOMStat,
-    observeChildNodes
+    findAllPSiblings,
+    findError,
+    observeChildNodes,
+    prepend
 } from '../src/index';
 
 function random(type) {
@@ -22,7 +22,7 @@ function random(type) {
 }
 
 describe('ДЗ 4 - Работа с DOM', () => {
-    /*describe('createDivWithText', () => {
+    describe('createDivWithText', () => {
         it('должна возвращать элемент с тегом DIV', () => {
             let text = random('string');
             let result = createDivWithText(text);
@@ -37,7 +37,7 @@ describe('ДЗ 4 - Работа с DOM', () => {
 
             assert.equal(result.innerText, text);
         });
-    });*/
+    });
 
     describe('prepend', () => {
         it('должна добавлять элемент в начало', () => {
@@ -56,7 +56,7 @@ describe('ДЗ 4 - Работа с DOM', () => {
         });
     });
 
-    /*describe('findAllPSiblings', () => {
+    describe('findAllPSiblings', () => {
         it('должна возвращать массив с элементами, соседями которых являются P', () => {
             let where = document.createElement('div');
             let result;
@@ -117,8 +117,8 @@ describe('ДЗ 4 - Работа с DOM', () => {
             let text1 = random('string');
             let text2 = random('string');
             let stat = {
-                tags: { P: 1, B: 2 },
-                classes: { [class1]: 2, [class2]: 1 },
+                tags: {P: 1, B: 2},
+                classes: {[class1]: 2, [class2]: 1},
                 texts: 3
             };
             let result;
@@ -239,5 +239,5 @@ describe('ДЗ 4 - Работа с DOM', () => {
 
             document.body.removeChild(where);
         });
-    });*/
+    });
 });
