@@ -36,6 +36,7 @@ function removeListener(eventName, target, fn) {
    приводить к переходу на другую страницу
  */
 function skipDefault(eventName, target) {
+    target.addEventListener(eventName, event => event.preventDefault());
 }
 
 /*
