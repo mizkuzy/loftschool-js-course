@@ -1,7 +1,7 @@
-import assert from 'assert';
+function removeListener(eventName, target, fn) {
+    target.removeEventListener(eventName, fn);
+}
 
-describe('Test', () => {
-    it('should work', () => {
-        assert(true == true);
-    });
-});
+function addListener(eventName, target, fn) {
+    target.addEventListener(eventName, fn);
+}
