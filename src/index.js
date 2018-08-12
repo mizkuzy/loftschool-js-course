@@ -10,6 +10,7 @@
     кликов на указанный элемент
  */
 function addListener(eventName, target, fn) {
+    target.addEventListener(eventName, fn);
 }
 
 /*

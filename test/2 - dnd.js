@@ -1,3 +1,4 @@
+/*
 import assert from 'assert';
 let template = require('../dnd-content.hbs');
 
@@ -45,3 +46,4 @@ describe('ДЗ 5.2 - Div D&D', () => {
         });
     });
 });
+*/
