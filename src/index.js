@@ -23,6 +23,7 @@ function addListener(eventName, target, fn) {
    // должна удалить указанный обработчик кликов на указанный элемент
  */
 function removeListener(eventName, target, fn) {
+    target.removeEventListener(eventName, fn);
 }
 
 /*
