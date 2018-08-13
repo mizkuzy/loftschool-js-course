@@ -80,16 +80,7 @@ function delegate(target, fn) {
     кликов для указанного элемента, который вызовется только один раз и затем удалится
  */
 function once(target, fn) {
-/*    let promise = new Promise(resolve => {
-        target.addEventListener('click', () => {
-            fn();
-            resolve();
-        });
-    });
-
-    promise.then(() => {
-        target.removeEventListener('click', fn);
-    });*/
+    target.addEventListener('click', fn, { once: true });
 }
 
 export {
