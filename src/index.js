@@ -62,6 +62,11 @@ function emulateClick(target) {
    который будет вызывать указанную функцию только если кликнули на кнопку (элемент с тегом button)
  */
 function delegate(target, fn) {
+    target.addEventListener('click', event => {
+        if (event.srcElement.nodeName === 'BUTTON') {
+            fn();
+        }
+    })
 }
 
 /*
@@ -75,6 +80,16 @@ function delegate(target, fn) {
     кликов для указанного элемента, который вызовется только один раз и затем удалится
  */
 function once(target, fn) {
+/*    let promise = new Promise(resolve => {
+        target.addEventListener('click', () => {
+            fn();
+            resolve();
+        });
+    });
+
+    promise.then(() => {
+        target.removeEventListener('click', fn);
+    });*/
 }
 
 export {
