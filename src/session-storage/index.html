@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Session storage</title>
+
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <script src="index.js" type="application/javascript"></script>
+</head>
+<body class="container text-container">
+<p>
+    В sessionStorage данные хранятся, пока страница не закроется
+</p>
+<p></p>
+<div>
+    Name:<br>
+    <input type="text" id="myName">
+</div>
+<div>
+    Birthday:<br>
+    <input type="text" id="bday">
+</div>
+<div>
+    About:<br>
+    <textarea id="about"></textarea>
+</div>
+<div>
+    <label>
+        <input type="checkbox" id="isSessionStorage">Use session storage
+    </label>
+</div>
+<div>
+    <button id="save">Save</button>
+    <button id="load">Load</button>
+</div>
+</body>
+</html>
