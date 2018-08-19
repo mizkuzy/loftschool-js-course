@@ -1,5 +1,6 @@
 import assert from 'assert';
-let template = require('../../../../Users/lrudkova/Downloads/dz7/cookie-content.hbs');
+
+let template = require('../cookie-content.hbs');
 
 function getCookies() {
     return document.cookie
@@ -24,7 +25,7 @@ describe('ДЗ 7.2 - Cookie editor', () => {
     homeworkContainer.id = 'homework-container';
     homeworkContainer.innerHTML = template();
     document.body.appendChild(homeworkContainer);
-    require('../../../../Users/lrudkova/Downloads/dz7/src/cookie');
+    require('../src/cookie');
 
     describe('Интеграционное тестирование', () => {
         beforeEach(() => {
@@ -58,6 +59,10 @@ describe('ДЗ 7.2 - Cookie editor', () => {
 
         it('cookie должны добавляться при нажатии на "добавить"', () => {
             let cookies;
+            addNameInput = homeworkContainer.querySelector('#add-name-input');
+            addValueInput = homeworkContainer.querySelector('#add-value-input');
+            addButton = homeworkContainer.querySelector('#add-button');
+            listTable = homeworkContainer.querySelector('#list-table tbody');
 
             addNameInput.value = 'test-cookie-name-1';
             addValueInput.value = 'test-cookie-value-1';
@@ -80,6 +85,10 @@ describe('ДЗ 7.2 - Cookie editor', () => {
 
         it('если при добавлении указано имя существующей cookie, то в таблице не должно быть дублей', () => {
             let cookies;
+            addNameInput = homeworkContainer.querySelector('#add-name-input');
+            addValueInput = homeworkContainer.querySelector('#add-value-input');
+            addButton = homeworkContainer.querySelector('#add-button');
+            listTable = homeworkContainer.querySelector('#list-table tbody');
 
             addNameInput.value = 'test-cookie-name-1';
             addValueInput.value = 'test-cookie-value-1';
@@ -103,6 +112,11 @@ describe('ДЗ 7.2 - Cookie editor', () => {
             let rows;
             let changedRow;
 
+            addNameInput = homeworkContainer.querySelector('#add-name-input');
+            addValueInput = homeworkContainer.querySelector('#add-value-input');
+            addButton = homeworkContainer.querySelector('#add-button');
+            listTable = homeworkContainer.querySelector('#list-table tbody');
+
             addNameInput.value = 'test-cookie-name-1';
             addValueInput.value = 'test-cookie-value-1';
             addButton.click();
@@ -124,6 +138,11 @@ describe('ДЗ 7.2 - Cookie editor', () => {
             let cookies;
             let deleteButton;
 
+            addNameInput = homeworkContainer.querySelector('#add-name-input');
+            addValueInput = homeworkContainer.querySelector('#add-value-input');
+            addButton = homeworkContainer.querySelector('#add-button');
+            listTable = homeworkContainer.querySelector('#list-table tbody');
+
             addNameInput.value = 'test-cookie-name-1';
             addValueInput.value = 'test-cookie-value-1';
             addButton.click();
@@ -132,7 +151,8 @@ describe('ДЗ 7.2 - Cookie editor', () => {
             addValueInput.value = 'test-cookie-value-2';
             addButton.click();
 
-            deleteButton = listTable.querySelector('button');
+            console.log(listTable);
+            deleteButton = listTable.querySelector('input');
 
             deleteButton.click();
             cookies = getCookies();
