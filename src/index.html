@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cookie editor</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <script src="index.js" type="application/javascript"></script>
+</head>
+<body id="homework-container">
+<table id="list-table tbody">
+    <thead>
+    <tr>
+        <th>Cookies list</th>
+        <th>Add a new cookie</th>
+        <th>Filter cookies</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>
+            <table style="width: 100%;">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Value</th>
+                    <th>Remove</th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </td>
+        <td>
+            <form>
+                <label for="add-name-input">Name</label>
+                <input type="text" name="cookie-name" placeholder="Enter a cookie name" id="add-name-input">
+                <br>
+                <label for="add-value-input">Value</label>
+                <input type="text" name="cookie-value" placeholder="Enter a cookie value" id="add-value-input">
+                <br>
+                <input type="submit" value="Add" id="add-button">
+            </form>
+        </td>
+        <td>
+            <input type="text" name="cookie-filter" placeholder="Filter cookies" id="filter-name-input">
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
