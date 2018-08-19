@@ -1,5 +1,6 @@
 import assert from 'assert';
-let template = require('../../../../Users/lrudkova/Downloads/dz7/cookie-content.hbs');
+
+let template = require('../src/cookie-content.hbs');
 
 function getCookies() {
     return document.cookie
@@ -24,7 +25,7 @@ describe('ДЗ 7.2 - Cookie editor', () => {
     homeworkContainer.id = 'homework-container';
     homeworkContainer.innerHTML = template();
     document.body.appendChild(homeworkContainer);
-    require('../../../../Users/lrudkova/Downloads/dz7/src/cookie');
+    require('../src/cookie');
 
     describe('Интеграционное тестирование', () => {
         beforeEach(() => {

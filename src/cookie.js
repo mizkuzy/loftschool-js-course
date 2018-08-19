@@ -17,6 +17,7 @@
  7.3: На странице должно быть текстовое поле для фильтрации cookie
  В таблице должны быть только те cookie, в имени или значении которых, хотя бы частично, есть введенное значение
  Если в поле фильтра пусто, то должны выводиться все доступные cookie
+
  Если дабавляемая cookie не соответсвуте фильтру, то она должна быть добавлена только в браузер, но не в таблицу
  Если добавляется cookie, с именем уже существующией cookie и ее новое значение не соответствует фильтру,
  то ее значение должно быть обновлено в браузере, а из таблицы cookie должна быть удалена
@@ -46,13 +47,29 @@ window.onload = () => {
     // таблица со списком cookie
     const listTable = homeworkContainer.querySelector('#list-table tbody');
 
-    fillListTable(listTable);
-    filterNameInput.addEventListener('keyup', function () {
-        // здесь можно обработать нажатия на клавиши внутри текстового поля для фильтрации cookie
+    fillListTable(convertCookieToObject(document.cookie));
+
+    filterNameInput.addEventListener('keyup', event => {
+        const cookieObj = convertCookieToObject(document.cookie);
+        const filterValue = event.currentTarget.value;
+        let filteredCookies = {};
+
+        for (const prop in cookieObj) {
+            if (prop.includes(filterValue) || cookieObj[prop].includes(filterValue)) {
+                filteredCookies[prop] = cookieObj[prop];
+            }
+        }
+
+        fillListTable(filteredCookies);
     });
 
-    addButton.addEventListener('click', () => {
-        // здесь можно обработать нажатие на кнопку "добавить cookie"
+    addButton.addEventListener('click', (event) => {
+        event.preventDefault();
+        if (addNameInput && addValueInput) {
+            document.cookie = `${addNameInput.value}=${addValueInput.value}`;
+
+            fillListTable(convertCookieToObject(document.cookie));
+        }
     });
 
     listTable.addEventListener('click', (event) => {
@@ -63,52 +80,57 @@ window.onload = () => {
 
             document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:01 GMT;`;
 
-            fillListTable(listTable);
+            fillListTable(convertCookieToObject(document.cookie));
         }
+    });
+
+    function fillListTable(cookiesObj) {
+        // clear table
+        listTable.innerText = '';
+
+        const tableRowsFragment = document.createDocumentFragment();
+
+        for (const cookie in cookiesObj) {
+            // create elements
+            const tableRow = document.createElement('tr');
+            const cookieNameTd = document.createElement('td');
+            const cookieValueTd = document.createElement('td');
+            const removeTd = document.createElement('td');
+            const removeBtn = document.createElement('input');
+
+            // add attributes to these elements
+            removeBtn.type = 'image';
+            removeBtn.src = 'trash.png';
+            removeBtn.width = 30;
+            removeBtn.height = 30;
+            removeBtn.classList.add('remove-btn');
+            removeTd.appendChild(removeBtn);
+
+            cookieNameTd.innerText = cookie;
+            cookieNameTd.classList.add('cookie-name');
+
+            cookieValueTd.innerText = cookiesObj[cookie];
+
+            // insert table data to table row
+            tableRow.appendChild(cookieNameTd);
+            tableRow.appendChild(cookieValueTd);
+            tableRow.appendChild(removeTd);
+
+            tableRowsFragment.appendChild(tableRow);
+        }
+
+        listTable.appendChild(tableRowsFragment);
+    }
+
+    document.querySelector('#filter-clear-btn').addEventListener('click', () => {
+        filterNameInput.value = '';
+
+        fillListTable(convertCookieToObject(document.cookie));
     })
 };
 
-function fillListTable(tableData) {
-    // clear table
-    tableData.innerText = '';
-
-    const cookiesObj = convertCookieToObject();
-    const tableRowsFragment = document.createDocumentFragment();
-
-    for (const cookie in cookiesObj) {
-        // create elements
-        const tableRow = document.createElement('tr');
-        const cookieNameTd = document.createElement('td');
-        const cookieValueTd = document.createElement('td');
-        const removeTd = document.createElement('td');
-        const removeBtn = document.createElement('input');
-
-        // add attributes to these elements
-        removeBtn.type = 'image';
-        removeBtn.src = 'trash.png';
-        removeBtn.width = 30;
-        removeBtn.height = 30;
-        removeBtn.classList.add('remove-btn');
-        removeTd.appendChild(removeBtn);
-
-        cookieNameTd.innerText = cookie;
-        cookieNameTd.classList.add('cookie-name');
-
-        cookieValueTd.innerText = cookiesObj[cookie];
-
-        // insert table data to table row
-        tableRow.appendChild(cookieNameTd);
-        tableRow.appendChild(cookieValueTd);
-        tableRow.appendChild(removeTd);
-
-        tableRowsFragment.appendChild(tableRow);
-    }
-
-    tableData.appendChild(tableRowsFragment);
-}
-
-function convertCookieToObject() {
-    return document.cookie.split('; ')
+function convertCookieToObject(cookie) {
+    return cookie.split('; ')
         .reduce((prev, cur) => {
             const [key, value] = cur.split('=');
 
