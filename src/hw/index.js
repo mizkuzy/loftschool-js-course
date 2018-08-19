@@ -32,22 +32,66 @@
    const newDiv = document.createElement('div');
    homeworkContainer.appendChild(newDiv);
  */
-const homeworkContainer = document.querySelector('#homework-container');
-// текстовое поле для фильтрации cookie
-const filterNameInput = homeworkContainer.querySelector('#filter-name-input');
-// текстовое поле с именем cookie
-const addNameInput = homeworkContainer.querySelector('#add-name-input');
-// текстовое поле со значением cookie
-const addValueInput = homeworkContainer.querySelector('#add-value-input');
-// кнопка "добавить cookie"
-const addButton = homeworkContainer.querySelector('#add-button');
-// таблица со списком cookie
-const listTable = homeworkContainer.querySelector('#list-table tbody');
 
-filterNameInput.addEventListener('keyup', function() {
-    // здесь можно обработать нажатия на клавиши внутри текстового поля для фильтрации cookie
-});
+window.onload = () => {
+    const homeworkContainer = document.querySelector('#homework-container');
+    // текстовое поле для фильтрации cookie
+    const filterNameInput = homeworkContainer.querySelector('#filter-name-input');
+    // текстовое поле с именем cookie
+    const addNameInput = homeworkContainer.querySelector('#add-name-input');
+    // текстовое поле со значением cookie
+    const addValueInput = homeworkContainer.querySelector('#add-value-input');
+    // кнопка "добавить cookie"
+    const addButton = homeworkContainer.querySelector('#add-button');
+    // таблица со списком cookie
+    const listTable = homeworkContainer.querySelector('#list-table tbody');
 
-addButton.addEventListener('click', () => {
-    // здесь можно обработать нажатие на кнопку "добавить cookie"
-});
+    fillListTable(listTable);
+    filterNameInput.addEventListener('keyup', function () {
+        // здесь можно обработать нажатия на клавиши внутри текстового поля для фильтрации cookie
+    });
+
+    addButton.addEventListener('click', () => {
+        // здесь можно обработать нажатие на кнопку "добавить cookie"
+    });
+};
+
+function fillListTable(tableData) {
+    const cookiesObj = convertCookieToObject();
+
+    var tableRowsFragment = document.createDocumentFragment();
+
+    for (const cookie in cookiesObj) {
+        const tableRow = document.createElement('tr');
+        const cookieName = document.createElement('td');
+        const cookieValue = document.createElement('td');
+        const removeCookie = document.createElement('td');
+        const removeBtn = document.createElement('input');
+
+        removeBtn.type = 'image';
+        removeBtn.src = 'trash.png';
+        removeBtn.width = 30;
+        removeBtn.height = 30;
+        removeCookie.appendChild(removeBtn);
+        cookieName.innerText = cookie;
+        cookieValue.innerText = cookiesObj[cookie];
+        tableRow.appendChild(cookieName);
+        tableRow.appendChild(cookieValue);
+        tableRow.appendChild(removeCookie);
+
+        tableRowsFragment.appendChild(tableRow);
+    }
+
+    tableData.appendChild(tableRowsFragment);
+}
+
+function convertCookieToObject() {
+    return document.cookie.split('; ')
+        .reduce((prev, cur) => {
+            const [key, value] = cur.split('=');
+
+            prev[key] = value;
+
+            return prev;
+        }, {});
+}
