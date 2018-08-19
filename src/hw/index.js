@@ -54,30 +54,52 @@ window.onload = () => {
     addButton.addEventListener('click', () => {
         // здесь можно обработать нажатие на кнопку "добавить cookie"
     });
+
+    listTable.addEventListener('click', (event) => {
+        // remove cookie
+        if (event.target.classList.contains('remove-btn')) {
+            const tableRow = event.target.parentElement.parentElement;
+            const cookieName = tableRow.querySelector('.cookie-name').innerText;
+
+            document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:01 GMT;`;
+
+            fillListTable(listTable);
+        }
+    })
 };
 
 function fillListTable(tableData) {
-    const cookiesObj = convertCookieToObject();
+    // clear table
+    tableData.innerText = '';
 
-    var tableRowsFragment = document.createDocumentFragment();
+    const cookiesObj = convertCookieToObject();
+    const tableRowsFragment = document.createDocumentFragment();
 
     for (const cookie in cookiesObj) {
+        // create elements
         const tableRow = document.createElement('tr');
-        const cookieName = document.createElement('td');
-        const cookieValue = document.createElement('td');
-        const removeCookie = document.createElement('td');
+        const cookieNameTd = document.createElement('td');
+        const cookieValueTd = document.createElement('td');
+        const removeTd = document.createElement('td');
         const removeBtn = document.createElement('input');
 
+        // add attributes to these elements
         removeBtn.type = 'image';
         removeBtn.src = 'trash.png';
         removeBtn.width = 30;
         removeBtn.height = 30;
-        removeCookie.appendChild(removeBtn);
-        cookieName.innerText = cookie;
-        cookieValue.innerText = cookiesObj[cookie];
-        tableRow.appendChild(cookieName);
-        tableRow.appendChild(cookieValue);
-        tableRow.appendChild(removeCookie);
+        removeBtn.classList.add('remove-btn');
+        removeTd.appendChild(removeBtn);
+
+        cookieNameTd.innerText = cookie;
+        cookieNameTd.classList.add('cookie-name');
+
+        cookieValueTd.innerText = cookiesObj[cookie];
+
+        // insert table data to table row
+        tableRow.appendChild(cookieNameTd);
+        tableRow.appendChild(cookieValueTd);
+        tableRow.appendChild(removeTd);
 
         tableRowsFragment.appendChild(tableRow);
     }
