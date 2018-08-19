@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Local storage</title>
+
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <script src="index.js" type="application/javascript"></script>
+</head>
+<body class="container text-container">
+<p>
+    При помощи localStorage можно хранить пользовательские данные, которые нам нужны даже если пользователь выключил комп,
+    закрыл браузер.
+    localStorage хранится на жёстком диске, так что пока винду не переустановить, данные будут доступны.
+</p>
+<p>
+    Объём localStorage ограничен 10-20 Мб в зависимости от браузера. Если попытаться записать что-нибудь в уже заполненный
+    localStorage, то браузер выкинет ошибку, поэтому при работе с localStorage можно использовать try-catch
+</p>
+<div>
+    Name:<br>
+    <input type="text" id="myName">
+</div>
+<div>
+    Birthday:<br>
+    <input type="text" id="bday">
+</div>
+<div>
+    About:<br>
+    <textarea id="about"></textarea>
+</div>
+<div>
+    <button id="save">Save</button>
+    <button id="load">Load</button>
+</div>
+</body>
+</html>
