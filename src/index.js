@@ -15,8 +15,30 @@ window.onload = () => {
         });
     }
 
+    function callApi(method, params) {
+        params.v = '5.80';
+
+        return new Promise((resolve, reject) => {
+            VK.api(method, params, (data) => {
+                if (data.error) {
+                    reject(data.error);
+                } else {
+                    resolve(data.response);
+                }
+            })
+        })
+    }
+
     auth()
         .then(() => {
-            const allFriends = document.querySelector('#all-vk-friends');
+            return callApi('friends.get', {fields: 'photo_100, first_name, last_name'})
+        })
+        .then((friends) => {
+            const friendTemplate = document.getElementById('user-tmplt').textContent;
+            const render = Handlebars.compile(friendTemplate);
+            const html = render(friends);
+
+            const allFriends = document.querySelector('#friends-list');
+            allFriends.innerHTML = html;
         })
 };
