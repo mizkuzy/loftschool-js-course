@@ -1,4 +1,5 @@
 window.onload = () => {
+
     VK.init({
         apiId: 5350105
     });
@@ -29,9 +30,33 @@ window.onload = () => {
         })
     }
 
+    function moveElementToLeft(event) {
+        const friend = event.target.parentElement;
+        const actionItem = friend.querySelector('.remove-item');
+        actionItem.textContent = '+';
+        actionItem.classList.remove('remove-item');
+        actionItem.classList.add('add-item');
+        actionItem.addEventListener('click', moveElementToRight, {once: true});
+
+        const choseFriends = document.querySelector('#friends-list');
+        choseFriends.appendChild(friend)
+    }
+
+    function moveElementToRight(event) {
+        const friend = event.target.parentElement;
+        const actionItem = friend.querySelector('.add-item');
+        actionItem.textContent = 'x';
+        actionItem.classList.remove('add-item');
+        actionItem.classList.add('remove-item');
+        actionItem.addEventListener('click', moveElementToLeft, {once: true});
+
+        const choseFriends = document.querySelector('#chose-vk-friends');
+        choseFriends.appendChild(friend)
+    }
+
     auth()
         .then(() => {
-            return callApi('friends.get', {fields: 'photo_100, first_name, last_name'})
+            return callApi('friends.get', {fields: 'photo_50, first_name, last_name'})
         })
         .then((friends) => {
             const friendTemplate = document.getElementById('user-tmplt').textContent;
@@ -39,6 +64,15 @@ window.onload = () => {
             const html = render(friends);
 
             const allFriends = document.querySelector('#friends-list');
+
             allFriends.innerHTML = html;
+
+            return new Promise(resolve => resolve())
         })
+        .then(() => {
+            const addItems = document.querySelectorAll('.add-item');
+            addItems.forEach((item) => {
+                item.addEventListener('click', moveElementToRight, {once: true});
+            });
+        });
 };

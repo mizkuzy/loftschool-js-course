@@ -15,18 +15,18 @@
 <div class="container">
     <header>Choose friends</header>
     <div id="filters">
-        <div id="friends-list-filter">Left Filter</div>
-        <div id="chose-vk-friends-filter">Right Filter</div>
+        <input id="friends-list-filter" type="text"/>
+        <input id="chose-vk-friends-filter" type="text"/>
     </div>
 
     <div id="friends">
-        <div class="left-list">
+        <div class="drop-zone">
             <h3>Your friends</h3>
             <div id="friends-list">
 
             </div>
         </div>
-        <div class="right-list">
+        <div class="drop-zone">
             <h3>Friends list</h3>
             <div id="chose-vk-friends">
 
@@ -38,14 +38,13 @@
 </div>
 
 <script id="user-tmplt" type="text/x-handlebars-template">
-    <div class="friends">
-        {{#each items}}
-        <div class="friend">
-            <img src="{{photo_100}}">
-            <span>{{first_name}} {{last_name}}</span>
-        </div>
-        {{/each}}
+    {{#each items}}
+    <div class="friend">
+        <img src="{{photo_50}}">
+        <span>{{first_name}} {{last_name}}</span>
+        <span class="add-item">+</span>
     </div>
+    {{/each}}
 </script>
 </body>
 </html>
