@@ -1,3 +1,17 @@
 .friend img {
     border-radius: 50%;
 }
+
+#chose-vk-friends {
+    width: 49%;
+    background: #FF7129;
+}
+
+#all-vk-friends {
+    width: 49%;
+    background: #21CC94
+}
+
+#chose-vk-friends, #all-vk-friends {
+    display: inline-block;
+}
