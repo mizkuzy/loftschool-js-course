@@ -19,16 +19,17 @@
         <input id="chose-vk-friends-filter" type="text"/>
     </div>
 
+    <!-- todo FIX CASE WHEN DROP ON THE HEADER-->
     <div id="friends">
         <div class="drop-zone">
             <h3>Your friends</h3>
-            <div id="friends-list">
+            <div id="friends-list" class="list">
 
             </div>
         </div>
         <div class="drop-zone">
             <h3>Friends list</h3>
-            <div id="chose-vk-friends">
+            <div id="chose-vk-friends" class="list">
 
             </div>
         </div>
@@ -39,10 +40,10 @@
 
 <script id="user-tmplt" type="text/x-handlebars-template">
     {{#each items}}
-    <div class="friend">
+    <div class="friend" draggable="true">
         <img src="{{photo_50}}">
         <span>{{first_name}} {{last_name}}</span>
-        <span class="add-item">+</span>
+        <span class="add-item action">+</span>
     </div>
     {{/each}}
 </script>

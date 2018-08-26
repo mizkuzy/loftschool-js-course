@@ -33,10 +33,7 @@ window.onload = () => {
     function moveElementToLeft(event) {
         const friend = event.target.parentElement;
         const actionItem = friend.querySelector('.remove-item');
-        actionItem.textContent = '+';
-        actionItem.classList.remove('remove-item');
-        actionItem.classList.add('add-item');
-        actionItem.addEventListener('click', moveElementToRight, {once: true});
+        updateNodeAction(actionItem);
 
         const choseFriends = document.querySelector('#friends-list');
         choseFriends.appendChild(friend)
@@ -45,10 +42,7 @@ window.onload = () => {
     function moveElementToRight(event) {
         const friend = event.target.parentElement;
         const actionItem = friend.querySelector('.add-item');
-        actionItem.textContent = 'x';
-        actionItem.classList.remove('add-item');
-        actionItem.classList.add('remove-item');
-        actionItem.addEventListener('click', moveElementToLeft, {once: true});
+        updateNodeAction(actionItem);
 
         const choseFriends = document.querySelector('#chose-vk-friends');
         choseFriends.appendChild(friend)
@@ -72,7 +66,84 @@ window.onload = () => {
         .then(() => {
             const addItems = document.querySelectorAll('.add-item');
             addItems.forEach((item) => {
+                item.draggable = true;
                 item.addEventListener('click', moveElementToRight, {once: true});
             });
         });
+
+    let currentDrag;
+
+    function getFriendNode(node) {
+        let friendNode = node;
+
+        while (!friendNode.classList.contains('friend')) {
+            friendNode = friendNode.parentElement
+        }
+
+        return friendNode;
+    }
+
+    document.addEventListener('dragstart', (event) => {
+        const zone = getCurrentZone(event.target);
+
+        if (zone) {
+            currentDrag = {startZone: zone, node: getFriendNode(event.target)};
+        }
+    });
+
+    document.addEventListener('dragover', (event) => {
+        // todo check with only method e.preventDefault();. Without any logic
+        const zone = getCurrentZone(event.target);
+
+        if (zone) {
+            event.preventDefault();
+        }
+    });
+
+    function updateNodeAction(node) {
+        if (node.classList.contains('remove-item')) {
+            node.textContent = '+';
+            node.classList.remove('remove-item');
+            node.classList.add('add-item');
+            node.addEventListener('click', moveElementToRight, {once: true});
+        } else {
+            node.textContent = 'x';
+            node.classList.remove('add-item');
+            node.classList.add('remove-item');
+            node.addEventListener('click', moveElementToLeft, {once: true});
+        }
+    }
+
+    document.addEventListener('drop', (event) => {
+        if (currentDrag) {
+            const dropZone = getCurrentZone(event.target);
+
+            event.preventDefault();
+
+            if (dropZone && currentDrag.startZone !== dropZone) {
+                const action = currentDrag.node.querySelector('.action');
+
+                updateNodeAction(action);
+
+                const dropList = dropZone.querySelector('.list');
+                if (event.target.classList.contains('drop-zone')) {
+                    dropList.insertBefore(currentDrag.node, dropList.lastElementChild);
+                } else {
+                    dropList.insertBefore(currentDrag.node, getFriendNode(event.target));
+                }
+            }
+
+            currentDrag = null;
+        }
+    });
+
+    function getCurrentZone(from) {
+        do {
+            if (from.classList.contains('drop-zone')) {
+                return from;
+            }
+        } while (from = from.parentElement);
+
+        return null;
+    }
 };
