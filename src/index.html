@@ -11,30 +11,30 @@
 
     <title>Friends filter</title>
 </head>
-<body class="container">
+<body>
 <div class="container">
     <header>Choose friends</header>
-    <div id="filters">
-        <input id="friends-list-filter" type="text"/>
-        <input id="chose-vk-friends-filter" type="text"/>
-    </div>
+    <div class="friends-container">
+        <div id="vk-friends">
+            <input class="filter" type="text"/>
 
-    <!-- todo FIX CASE WHEN DROP ON THE HEADER-->
-    <div id="friends">
-        <div class="drop-zone">
             <h3>Your friends</h3>
-            <div id="friends-list" class="list">
-
+            <div class="drop-zone">
+                <div id="friends-list" class="list">
+                </div>
             </div>
         </div>
-        <div class="drop-zone">
-            <h3>Friends list</h3>
-            <div id="chose-vk-friends" class="list">
+        <div id="vk-friends-saved">
+            <input class="filter" type="text"/>
 
+            <h3>Friends list</h3>
+            <div class="drop-zone">
+                <div id="chose-vk-friends" class="list">
+
+                </div>
             </div>
         </div>
     </div>
-
     <button id="save-friends-list">Save</button>
 </div>
 
