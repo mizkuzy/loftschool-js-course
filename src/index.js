@@ -127,7 +127,7 @@ window.onload = () => {
 
                 const dropList = dropZone.querySelector('.list');
                 if (event.target.classList.contains('drop-zone')) {
-                    dropList.insertBefore(currentDrag.node, dropList.lastElementChild);
+                    dropList.appendChild(currentDrag.node);
                 } else {
                     dropList.insertBefore(currentDrag.node, getFriendNode(event.target));
                 }
