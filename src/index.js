@@ -1,5 +1,4 @@
 window.onload = () => {
-
     VK.init({
         apiId: 5350105
     });
@@ -146,4 +145,31 @@ window.onload = () => {
 
         return null;
     }
+
+    /* FILTERS*/
+    const filters = document.querySelectorAll('.filter');
+
+    function filterZoneBy(zone, filter) {
+        //const cookieObj = convertCookieToObject(document.cookie);
+        let filteredCookies = {};
+
+        /*        for (const key in cookieObj) {
+                    if (hasFilterValue(key, cookieObj[key], filter)) {
+                        filteredCookies[key] = cookieObj[key];
+                    }
+                }*/
+
+        return filteredCookies;
+    }
+
+    filters.forEach((filter) => {
+        filter.addEventListener('keyup', (event) => {
+            const curFilter = event.currentTarget;
+            const filteredCookies = filterZoneBy(curFilter.parentElement.querySelector('.list'), curFilter.value);
+
+            //fillListTable(filteredCookies);
+        })
+    });
+
+    console.log(filters)
 };

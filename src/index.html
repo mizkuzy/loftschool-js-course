@@ -42,7 +42,10 @@
     {{#each items}}
     <div class="friend" draggable="true">
         <img src="{{photo_50}}">
-        <span>{{first_name}} {{last_name}}</span>
+        <span>
+            <span class="name">{{first_name}}</span>
+            <span class="surname">{{last_name}}</span>
+        </span>
         <span class="add-item action">+</span>
     </div>
     {{/each}}
