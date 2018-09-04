@@ -32,43 +32,89 @@ window.onload = () => {
     function moveElementToLeft(event) {
         const friend = event.target.parentElement;
         const actionItem = friend.querySelector('.remove-item');
+
         updateNodeAction(actionItem);
 
         const choseFriends = document.querySelector('#friends-list');
+
         choseFriends.appendChild(friend)
     }
 
     function moveElementToRight(event) {
         const friend = event.target.parentElement;
         const actionItem = friend.querySelector('.add-item');
+
         updateNodeAction(actionItem);
 
         const choseFriends = document.querySelector('#chose-vk-friends');
+
         choseFriends.appendChild(friend)
     }
 
-    auth()
-        .then(() => {
-            return callApi('friends.get', {fields: 'photo_50, first_name, last_name'})
-        })
-        .then((friends) => {
-            const friendTemplate = document.getElementById('user-tmplt').textContent;
-            const render = Handlebars.compile(friendTemplate);
-            const html = render(friends);
+    function getVkFriends() {
+        return callApi('friends.get', {fields: 'photo_50, first_name, last_name'})
+    }
 
-            const allFriends = document.querySelector('#friends-list');
+    function saveListTo(storageField, list, isLocalStorage) {
+        try {
+            if (isLocalStorage) {
+                localStorage[storageField] = JSON.stringify(list);
+            } else {
+                sessionStorage[storageField] = JSON.stringify(list);
+            }
 
-            allFriends.innerHTML = html;
+        } catch (e) {
+            alert(`ой вей! Что-то не так! ${e}`);
+        }
+    }
 
-            return new Promise(resolve => resolve())
-        })
-        .then(() => {
-            const addItems = document.querySelectorAll('.add-item');
-            addItems.forEach((item) => {
-                item.draggable = true;
-                item.addEventListener('click', moveElementToRight, {once: true});
-            });
+    function getSavedListFrom(storageField, isLocalStorage) {
+        let list = {};
+
+        if (isLocalStorage) {
+            list = localStorage[storageField];
+        } else {
+            list = sessionStorage[storageField];
+        }
+
+        return list ? JSON.parse(list) : {};
+    }
+
+    function fillFriendsList(listId, friends) {
+        const friendTemplate = document.getElementById('user-tmplt').textContent;
+        const render = Handlebars.compile(friendTemplate);
+        const html = render(friends);
+
+        const allFriends = document.querySelector(`#${listId}`);
+
+        allFriends.innerHTML = html;
+    }
+
+    function renderVkFriends(friends) {
+        saveListTo('friends-list', friends, false);
+        fillFriendsList('friends-list', friends);
+        fillFriendsList('chose-vk-friends', getSavedListFrom('chose-vk-friends', true));
+
+        return new Promise(resolve => resolve())
+    }
+
+    function addActions() {
+        const addItems = document.querySelectorAll('.add-item');
+
+        addItems.forEach((item) => {
+            item.draggable = true;
+            item.addEventListener('click', moveElementToRight, {once: true});
         });
+    }
+
+    function initVkFriends() {
+        getVkFriends()
+            .then(renderVkFriends)
+            .then(addActions)
+    }
+
+    auth()
+        .then(initVkFriends);
 
     let currentDrag;
 
@@ -125,6 +171,7 @@ window.onload = () => {
                 updateNodeAction(action);
 
                 const dropList = dropZone.querySelector('.list');
+
                 if (event.target.classList.contains('drop-zone')) {
                     dropList.appendChild(currentDrag.node);
                 } else {
@@ -170,6 +217,4 @@ window.onload = () => {
             //fillListTable(filteredCookies);
         })
     });
-
-    console.log(filters)
 };
