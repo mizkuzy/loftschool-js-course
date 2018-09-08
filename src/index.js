@@ -1,9 +1,9 @@
-const friendsList = 'friends-list';
-const choseFriendsList = 'chose-vk-friends';
+const friendsListId = 'friends-list';
+const choseFriendsListId = 'chose-vk-friends';
 
 // check that we have at least friends list in storage
 function savedFriendsExistInLocalStorage() {
-    return localStorage[friendsList];
+    return localStorage[friendsListId];
 }
 
 window.onload = () => {
@@ -41,36 +41,34 @@ window.onload = () => {
         return callApi('friends.get', {fields: 'photo_50, first_name, last_name'})
     }
 
-    function moveElementToLeft(event) {
-        const friend = event.target.parentElement;
-        const actionItem = friend.querySelector('.remove-item');
-
-        updateNodeAction(actionItem);
-
-        const choseFriends = document.querySelector('#' + friendsList);
-
-        choseFriends.appendChild(friend)
+    function getItem(node) {
+        return item = {
+            first_name: node.querySelector('.name').innerText,
+            last_name: node.querySelector('.surname').innerText,
+            photo_50: node.querySelector('img').src,
+        };
     }
 
-    function moveElementToRight(event) {
-        const friend = event.target.parentElement;
-        const actionItem = friend.querySelector('.add-item');
+    function convertNodeToObject(node) {
+        let obj = {items: []};
+        let items = [];
 
-        updateNodeAction(actionItem);
+        for (const n of node.children) {
+            items.push(getItem(n));
+        }
 
-        const choseFriends = document.querySelector('#' + choseFriendsList);
+        obj.items = items;
 
-        choseFriends.appendChild(friend)
+        return obj;
     }
 
-    function saveListTo(storageField, list, isLocalStorage) {
+    function saveListTo(storageField, list, isLocalStorage = false) {
         try {
             if (isLocalStorage) {
                 localStorage[storageField] = JSON.stringify(list);
             } else {
                 sessionStorage[storageField] = JSON.stringify(list);
             }
-
         } catch (e) {
             alert(`ой вей! Что-то не так! ${e}`);
         }
@@ -88,6 +86,64 @@ window.onload = () => {
         return list ? JSON.parse(list) : {};
     }
 
+    function updateSession(friend, from, to) {
+        const name = friend.querySelector('.name').innerText;
+        const surname = friend.querySelector('.surname').innerText;
+
+        // remove a friend from source list
+        const updatedFromList = getSavedListFrom(from, false).items
+            .filter((item) => item.first_name !== name && item.last_name !== surname);
+
+        const items = getSavedListFrom(to, false).items;
+
+        // add a friend to destination list
+        items.push(getItem(friend));
+
+        // save both lists
+        saveListTo(from, {items: updatedFromList});
+        saveListTo(to, {items: items});
+    }
+
+    function updateNodeAction(node) {
+        if (node.classList.contains('remove-item')) {
+            node.textContent = '+';
+            node.classList.remove('remove-item');
+            node.classList.add('add-item');
+            node.addEventListener('click', moveElementToRight, {once: true});
+        } else {
+            node.textContent = 'x';
+            node.classList.remove('add-item');
+            node.classList.add('remove-item');
+            node.addEventListener('click', moveElementToLeft, {once: true});
+        }
+    }
+
+    function moveElementToLeft(event) {
+        const friend = event.target.parentElement;
+        const actionItem = friend.querySelector('.remove-item');
+
+        updateNodeAction(actionItem);
+
+        const friends = document.querySelector('#' + friendsListId);
+
+        friends.appendChild(friend);
+
+        updateSession(friend, choseFriendsListId, friendsListId);
+    }
+
+    function moveElementToRight(event) {
+        const friend = event.target.parentElement;
+        const actionItem = friend.querySelector('.add-item');
+
+        updateNodeAction(actionItem);
+
+        const friends = document.querySelector('#' + choseFriendsListId);
+
+        friends.appendChild(friend);
+
+        updateSession(friend, friendsListId, choseFriendsListId);
+    }
+
     function fillFriendsList(listId, friends) {
         const friendTemplate = document.getElementById('user-tmplt').textContent;
         const render = Handlebars.compile(friendTemplate);
@@ -100,18 +156,19 @@ window.onload = () => {
 
     function renderVkFriends(friends) {
         if (savedFriendsExistInLocalStorage()) {
-            console.log('liad friends from local storage')
+            console.log('load friends from local storage');
+            fillFriendsList(choseFriendsListId, getSavedListFrom(choseFriendsListId, true));
         } else {
             // put friends list in the session storage
-            saveListTo(friendsList, friends, false);
-            fillFriendsList(friendsList, friends);
-            fillFriendsList(choseFriendsList, getSavedListFrom(choseFriendsList, true));
+            saveListTo(friendsListId, friends);
+            saveListTo(choseFriendsListId, {items: []});
+            fillFriendsList(friendsListId, friends);
         }
 
         return new Promise(resolve => resolve())
     }
 
-    function addActions() {
+    function addMoveRightAction() {
         const addItems = document.querySelectorAll('.add-item');
 
         addItems.forEach((item) => {
@@ -120,10 +177,27 @@ window.onload = () => {
         });
     }
 
+    function addMoveLeftActions() {
+        const addItems = document.querySelectorAll('.add-item');
+
+        addItems.forEach((item) => {
+            item.draggable = true;
+            item.addEventListener('click', moveElementToRight, {once: true});
+        });
+    }
+
+    function addActions(friendsId) {
+        if (friendsId === friendsListId) {
+            addMoveRightAction()
+        } else {
+            addMoveLeftActions()
+        }
+    }
+
     function initVkFriends() {
         getVkFriends()
             .then(renderVkFriends)
-            .then(addActions)
+            .then(addMoveRightAction) // todo think!
     }
 
     auth()
@@ -158,20 +232,6 @@ window.onload = () => {
         }
     });
 
-    function updateNodeAction(node) {
-        if (node.classList.contains('remove-item')) {
-            node.textContent = '+';
-            node.classList.remove('remove-item');
-            node.classList.add('add-item');
-            node.addEventListener('click', moveElementToRight, {once: true});
-        } else {
-            node.textContent = 'x';
-            node.classList.remove('add-item');
-            node.classList.add('remove-item');
-            node.addEventListener('click', moveElementToLeft, {once: true});
-        }
-    }
-
     document.addEventListener('drop', (event) => {
         if (currentDrag) {
             const dropZone = getCurrentZone(event.target);
@@ -179,17 +239,20 @@ window.onload = () => {
             event.preventDefault();
 
             if (dropZone && currentDrag.startZone !== dropZone) {
-                const action = currentDrag.node.querySelector('.action');
+                const friend = currentDrag.node;
+                const action = friend.querySelector('.action');
 
                 updateNodeAction(action);
 
                 const dropList = dropZone.querySelector('.list');
 
                 if (event.target.classList.contains('drop-zone')) {
-                    dropList.appendChild(currentDrag.node);
+                    dropList.appendChild(friend);
                 } else {
-                    dropList.insertBefore(currentDrag.node, getFriendNode(event.target));
+                    dropList.insertBefore(friend, getFriendNode(event.target));
                 }
+
+                updateSession(friend, currentDrag.startZone.firstElementChild.id, dropList.id);
             }
 
             currentDrag = null;
