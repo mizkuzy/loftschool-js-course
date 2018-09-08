@@ -86,7 +86,25 @@ window.onload = () => {
         return list ? JSON.parse(list) : {};
     }
 
-    function updateSession(friend, from, to) {
+    function getIndex(items, node) {
+        let index = 0;
+        let foundNodeIndex = false;
+
+        while (!foundNodeIndex) {
+            const firstName = node.querySelector('.name').innerText;
+            const lastName = node.querySelector('.surname').innerText;
+
+            if (items[index].first_name === firstName && items[index].last_name === lastName) {
+                foundNodeIndex = true;
+            } else {
+                index++;
+            }
+        }
+
+        return index;
+    }
+
+    function updateSession(friend, from, to, nextNode) {
         const name = friend.querySelector('.name').innerText;
         const surname = friend.querySelector('.surname').innerText;
 
@@ -97,7 +115,13 @@ window.onload = () => {
         const items = getSavedListFrom(to, false).items;
 
         // add a friend to destination list
-        items.push(getItem(friend));
+        if (nextNode) {
+            const index = getIndex(items, nextNode);
+
+            items.splice(index, 0, getItem(friend));
+        } else {
+            items.push(getItem(friend));
+        }
 
         // save both lists
         saveListTo(from, {items: updatedFromList});
@@ -252,7 +276,8 @@ window.onload = () => {
                     dropList.insertBefore(friend, getFriendNode(event.target));
                 }
 
-                updateSession(friend, currentDrag.startZone.firstElementChild.id, dropList.id);
+                updateSession(friend, currentDrag.startZone.firstElementChild.id, dropList.id,
+                    getFriendNode(event.target));
             }
 
             currentDrag = null;
