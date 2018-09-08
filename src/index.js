@@ -49,19 +49,6 @@ window.onload = () => {
         };
     }
 
-    function convertNodeToObject(node) {
-        let obj = {items: []};
-        let items = [];
-
-        for (const n of node.children) {
-            items.push(getItem(n));
-        }
-
-        obj.items = items;
-
-        return obj;
-    }
-
     function saveListTo(storageField, list, isLocalStorage = false) {
         try {
             if (isLocalStorage) {
@@ -74,7 +61,7 @@ window.onload = () => {
         }
     }
 
-    function getSavedListFrom(storageField, isLocalStorage) {
+    function getSavedListFrom(storageField, isLocalStorage = false) {
         let list = {};
 
         if (isLocalStorage) {
@@ -109,10 +96,10 @@ window.onload = () => {
         const surname = friend.querySelector('.surname').innerText;
 
         // remove a friend from source list
-        const updatedFromList = getSavedListFrom(from, false).items
+        const updatedFromList = getSavedListFrom(from).items
             .filter((item) => item.first_name !== name && item.last_name !== surname);
 
-        const items = getSavedListFrom(to, false).items;
+        const items = getSavedListFrom(to).items;
 
         // add a friend to destination list
         if (nextNode) {
@@ -180,7 +167,7 @@ window.onload = () => {
 
     function renderVkFriends(friends) {
         if (savedFriendsExistInLocalStorage()) {
-            console.log('load friends from local storage');
+            fillFriendsList(friendsListId, getSavedListFrom(friendsListId, true));
             fillFriendsList(choseFriendsListId, getSavedListFrom(choseFriendsListId, true));
         } else {
             // put friends list in the session storage
@@ -193,20 +180,26 @@ window.onload = () => {
     }
 
     function addMoveRightAction() {
-        const addItems = document.querySelectorAll('.add-item');
+        const addItems = document.querySelector('#' + friendsListId)
+            .querySelectorAll('.action');
 
         addItems.forEach((item) => {
+            item.classList.add('add-item');
             item.draggable = true;
+            item.innerText = '+';
             item.addEventListener('click', moveElementToRight, {once: true});
         });
     }
 
     function addMoveLeftActions() {
-        const addItems = document.querySelectorAll('.add-item');
+        const addItems = document.querySelector('#' + choseFriendsListId)
+            .querySelectorAll('.action');
 
         addItems.forEach((item) => {
+            item.classList.add('remove-item');
             item.draggable = true;
-            item.addEventListener('click', moveElementToRight, {once: true});
+            item.innerText = 'x';
+            item.addEventListener('click', moveElementToLeft, {once: true});
         });
     }
 
@@ -221,7 +214,10 @@ window.onload = () => {
     function initVkFriends() {
         getVkFriends()
             .then(renderVkFriends)
-            .then(addMoveRightAction) // todo think!
+            .then(() => {
+                addActions(friendsListId);
+                addActions(choseFriendsListId);
+            })
     }
 
     auth()
@@ -323,7 +319,7 @@ window.onload = () => {
         filter.addEventListener('keyup', (event) => {
             const curFilter = event.currentTarget;
             const friendsId = curFilter.parentElement.querySelector('.list').id;
-            const friendsList = getSavedListFrom(friendsId, false);
+            const friendsList = getSavedListFrom(friendsId);
             const filterValue = curFilter.value;
 
             if (filterValue) {
@@ -337,4 +333,10 @@ window.onload = () => {
             addActions(friendsId);
         })
     });
+
+    // SAVE TO LOCAL STORAGE
+    document.querySelector('#save-friends-list').addEventListener('click', () => {
+        saveListTo(friendsListId, getSavedListFrom(friendsListId), true);
+        saveListTo(choseFriendsListId, getSavedListFrom(choseFriendsListId), true);
+    })
 };

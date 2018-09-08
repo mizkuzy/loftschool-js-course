@@ -14,6 +14,7 @@
 <body>
 <div class="container">
     <header>Choose friends</header>
+    <button id="save-friends-list">Save</button>
     <div class="friends-container">
         <div id="vk-friends">
             <input id='vk-friends-filter' class="filter" type="text"/>
@@ -35,7 +36,6 @@
             </div>
         </div>
     </div>
-    <button id="save-friends-list">Save</button>
 </div>
 
 <script id="user-tmplt" type="text/x-handlebars-template">
@@ -46,7 +46,7 @@
             <span class="name">{{first_name}}</span>
             <span class="surname">{{last_name}}</span>
         </span>
-        <span class="add-item action">+</span>
+        <span class="action"></span>
     </div>
     {{/each}}
 </script>
