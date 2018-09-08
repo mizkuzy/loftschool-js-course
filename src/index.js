@@ -1,3 +1,11 @@
+const friendsList = 'friends-list';
+const choseFriendsList = 'chose-vk-friends';
+
+// check that we have at least friends list in storage
+function savedFriendsExistInLocalStorage() {
+    return localStorage[friendsList];
+}
+
 window.onload = () => {
     VK.init({
         apiId: 5350105
@@ -29,13 +37,17 @@ window.onload = () => {
         })
     }
 
+    function getVkFriends() {
+        return callApi('friends.get', {fields: 'photo_50, first_name, last_name'})
+    }
+
     function moveElementToLeft(event) {
         const friend = event.target.parentElement;
         const actionItem = friend.querySelector('.remove-item');
 
         updateNodeAction(actionItem);
 
-        const choseFriends = document.querySelector('#friends-list');
+        const choseFriends = document.querySelector('#' + friendsList);
 
         choseFriends.appendChild(friend)
     }
@@ -46,13 +58,9 @@ window.onload = () => {
 
         updateNodeAction(actionItem);
 
-        const choseFriends = document.querySelector('#chose-vk-friends');
+        const choseFriends = document.querySelector('#' + choseFriendsList);
 
         choseFriends.appendChild(friend)
-    }
-
-    function getVkFriends() {
-        return callApi('friends.get', {fields: 'photo_50, first_name, last_name'})
     }
 
     function saveListTo(storageField, list, isLocalStorage) {
@@ -91,9 +99,14 @@ window.onload = () => {
     }
 
     function renderVkFriends(friends) {
-        saveListTo('friends-list', friends, false);
-        fillFriendsList('friends-list', friends);
-        fillFriendsList('chose-vk-friends', getSavedListFrom('chose-vk-friends', true));
+        if (savedFriendsExistInLocalStorage()) {
+            console.log('liad friends from local storage')
+        } else {
+            // put friends list in the session storage
+            saveListTo(friendsList, friends, false);
+            fillFriendsList(friendsList, friends);
+            fillFriendsList(choseFriendsList, getSavedListFrom(choseFriendsList, true));
+        }
 
         return new Promise(resolve => resolve())
     }
