@@ -294,28 +294,47 @@ window.onload = () => {
         return null;
     }
 
-    /* FILTERS*/
+    /* FILTERS */
     const filters = document.querySelectorAll('.filter');
 
-    function filterZoneBy(zone, filter) {
-        //const cookieObj = convertCookieToObject(document.cookie);
-        let filteredCookies = {};
+    function hasFilterValue(string, filter) {
+        return string.startsWith(filter);
+    }
 
-        /*        for (const key in cookieObj) {
-                    if (hasFilterValue(key, cookieObj[key], filter)) {
-                        filteredCookies[key] = cookieObj[key];
-                    }
-                }*/
+    function filterListBy(friendsList, filter) {
+        let filteredFriends = {
+            items: []
+        };
+        const list = friendsList.items;
 
-        return filteredCookies;
+        for (const prop in list) {
+            const name = list[prop].first_name;
+            const surname = list[prop].last_name;
+
+            if (hasFilterValue(name, filter) || hasFilterValue(surname, filter)) {
+                filteredFriends.items.push(list[prop]);
+            }
+        }
+
+        return filteredFriends;
     }
 
     filters.forEach((filter) => {
         filter.addEventListener('keyup', (event) => {
             const curFilter = event.currentTarget;
-            const filteredCookies = filterZoneBy(curFilter.parentElement.querySelector('.list'), curFilter.value);
+            const friendsId = curFilter.parentElement.querySelector('.list').id;
+            const friendsList = getSavedListFrom(friendsId, false);
+            const filterValue = curFilter.value;
 
-            //fillListTable(filteredCookies);
+            if (filterValue) {
+                const filteredFriends = filterListBy(friendsList, filterValue);
+
+                fillFriendsList(friendsId, filteredFriends);
+            } else {
+                fillFriendsList(friendsId, friendsList);
+            }
+
+            addActions(friendsId);
         })
     });
 };
